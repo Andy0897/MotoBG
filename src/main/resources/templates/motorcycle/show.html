@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body class="bg-dark">
+<nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <div class="container mt-5" style="max-width: 1000px;">
+        <div class="container mt-5">
+            <h2 class="text-center text-white mb-4">Филтър за мотори</h2>
+
+            <form th:action="@{/motorcycles/filter}" method="get" class="bg-dark text-white p-4 rounded shadow-lg">
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <label for="brand" class="form-label">Марка</label>
+                        <select class="form-control" id="brand" name="brand" onchange="updateModels(this.value)">
+                            <option value="">Всички</option>
+                            <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="model" class="form-label">Модел</label>
+                        <select class="form-control" id="model" name="model">
+                            <option value="">Всички</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-lg-4">
+                        <label for="minPrice" class="form-label">Цена от (лв.)</label>
+                        <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Минимум">
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="maxPrice" class="form-label">Цена до (лв.)</label>
+                        <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Максимум">
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="mileage" class="form-label">Максимален пробег (км)</label>
+                        <input type="number" id="mileage" name="mileage" class="form-control" placeholder="Пример: 20000">
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3 align-items-center">
+                    <div class="col-lg-8">
+                        <label for="cubicCapacity" class="form-label">Кубатура (cc)</label>
+                        <input type="range" class="form-range" id="cubicCapacity" name="cubicCapacity" min="50" max="2000" step="50" oninput="this.nextElementSibling.value = this.value">
+                        <output class="ms-2">1000</output> cc
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="isOffer" class="form-label">Само оферти</label>
+                        <select id="isOffer" name="isOffer" class="form-control">
+                            <option value="">Всички</option>
+                            <option value="true">Да</option>
+                            <option value="false">Не</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger w-100 py-2">
+                        <i class="fas fa-search"></i> Търси
+                    </button>
+                </div>
+            </form>
+        </div>
+        <h1 class="mb-4 mt-1 text-white text-center">Автомобили</h1>
+        <div th:if="${motorcycles.empty}" class="text-center" style="min-height: 250px;">
+            <p style="font-size: 1.5rem; color: gray;">Все още няма обяви.</p>
+        </div>
+
+        <div class="row g-4" th:if="${!motorcycles.empty}">
+            <div th:each="motorcycle : ${motorcycles}" class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card bg-secondary bg-opacity-25 h-100">
+                    <form th:action="@{/motorcycles/{id}(id=${motorcycle.id})}" method="get" class="h-100">
+                        <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
+                            <div class="card-img-top" style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
+                                <img th:src="@{'data:image/jpeg;base64,' + ${encoder.encodeToBase64(motorcycle.images.get(motorcycle.mainImageIndex))}}"
+                                     alt="Main Image" class="img-fluid" style="object-fit: cover; width: 100%; height: auto; max-height: 200px;">
+                            </div>
+
+                            <div class="card-body d-flex flex-column" style="min-height: 185px;">
+                                <h3 class="card-title text-white text-truncate"
+                                    th:text="${motorcycle.brand.name} + ' ' + ${motorcycle.model.name}"
+                                    style="white-space: normal;"></h3>
+                                <div th:if="${!motorcycle.isOffer}">
+                                    <h4 class="card-subtitle text-white" th:text="${motorcycle.price} + ' лв.'"></h4>
+                                    <p class="card-text text-white" th:text="'(' + ${motorcycle.mileage} + ' км)'"></p>
+                                </div>
+                                <div th:if="${motorcycle.isOffer}">
+                                    <h7 class="text-white mb-1" style="text-decoration: line-through;"
+                                        th:text="${motorcycle.price} + ' лв.'"></h7>
+                                    <h4 class="text-danger mb-0" th:text="${motorcycle.offerPrice} + ' лв.'"></h4>
+                                    <p class="card-text" th:text="'(' + ${motorcycle.mileage} + ' км)'"></p>
+                                </div>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
+<script>
+    function updateModels(brandId) {
+        fetch(`/models/models-by-brand/${brandId}`)
+        .then(response => response.json())
+        .then(models => {
+            const modelDropdown = document.getElementById("model");
+            modelDropdown.innerHTML = '<option value="">Всички</option>';
+            models.forEach(model => {
+                const option = document.createElement("option");
+                option.value = model.id;
+                option.textContent = model.name;
+                modelDropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error fetching models:", error));
+    }
+</script>
+</body>
+</html>
