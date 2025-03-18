@@ -5,24 +5,15 @@
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
     <div class="container mt-5" style="max-width: 1000px;">
-        <div class="row gx-5 align-items-center mb-4">
-            <div class="col-xxl-5">
-                <div class="text-center text-xxl-start">
-                    <p class="text-white display-6 fw-bolder mb-1">
-                        <span class="text-white text-gradient d-inline">Добре дошли в нашия автосалон!</span>
-                    </p>
-                    <div class="fs-3 fw-light text-white mb-2">Това е специален раздел за представяне на най-добрите автомобили и авточасти, които предлагаме.</div>
-                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-4">
-                        <a class="btn btn-danger btn-lg px-5 py-2 me-sm-3 fs-6 fw-bolder" href="/motorcycles/">Разгледайте още</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xxl-7">
-                <div class="d-flex justify-content-center mt-5 mt-xxl-0">
-                    <div class="profile bg-gradient-primary-to-secondary">
-                        <img class="profile-img" th:src="@{/images/banner-image.png}" style="max-height: 400px;" />
-                    </div>
-                </div>
+        <div class="rounded position-relative text-white text-center mb-5" style="max-height: 400px; overflow: hidden;">
+            <img src="/images/banner.jpg" class="img-fluid w-100" alt="Мотоциклети банер"
+                 style="max-height: 400px; object-fit: cover;">
+
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+                 style="background: rgba(0, 0, 0, 0.4);">
+                <h2 class="fw-bold responsive-title">Най-добрите мотоциклети на пазара!</h2>
+                <p class="responsive-text">Разгледай топ офертите на премиум марки като Honda, Yamaha, Ducati и други!</p>
+                <a href="/motorcycles/bestsellers" class="btn btn-light fw-bold px-4 py-2">Разгледай сега</a>
             </div>
         </div>
 
@@ -36,23 +27,28 @@
                     <div class="card h-100 bg-secondary bg-opacity-25">
                         <form th:action="@{/motorcycles/{id}(id=${motorcycle.id})}" method="get" class="h-100">
                             <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
-                                <div class="card-img-top" style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
+                                <div class="card-img-top"
+                                     style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
                                     <img th:src="@{'data:image/jpeg;base64,' + ${encoder.encodeToBase64(motorcycle.images.get(motorcycle.mainImageIndex))}}"
-                                         alt="Main Image" style="object-fit: cover; width: 100%; height: auto; max-height: 200px;"/>
+                                         alt="Main Image"
+                                         style="object-fit: cover; width: 100%; height: auto; max-height: 200px;"/>
                                 </div>
                                 <div class="card-body d-flex flex-column" style="min-height: 185px;">
                                     <h3 class="card-title text-white text-truncate"
                                         th:text="${motorcycle.brand.name} + ' ' + ${motorcycle.model.name}"
                                         style="white-space: normal;"></h3>
                                     <div th:if="${!motorcycle.isOffer}">
-                                        <h4 class="card-subtitle text-white" th:text="${motorcycle.price} + ' лв.'"></h4>
-                                        <p class="card-text text-white" th:text="'(' + ${motorcycle.mileage} + ' км)'"></p>
+                                        <h4 class="card-subtitle text-white"
+                                            th:text="${motorcycle.price} + ' лв.'"></h4>
+                                        <p class="card-text text-white"
+                                           th:text="'(' + ${motorcycle.mileage} + ' км)'"></p>
                                     </div>
                                     <div th:if="${motorcycle.isOffer}">
                                         <h7 class="text-secondary mb-1" style="text-decoration: line-through;"
                                             th:text="${motorcycle.price} + ' лв.'"></h7>
                                         <h4 class="text-danger mb-0" th:text="${motorcycle.offerPrice} + ' лв.'"></h4>
-                                        <p class="card-text text-white" th:text="'(' + ${motorcycle.mileage} + ' км)'"></p>
+                                        <p class="card-text text-white"
+                                           th:text="'(' + ${motorcycle.mileage} + ' км)'"></p>
                                     </div>
                                 </div>
                             </button>

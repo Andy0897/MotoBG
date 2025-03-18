@@ -9,10 +9,6 @@
             <div class="col-12 col-md-8 col-lg-6">
                 <div class="card bg-secondary bg-opacity-25 border-0 shadow-sm p-4">
                     <div class="text-center">
-                        <img th:src="@{/images/profile-picture.jpg}"
-                             alt="Profile Picture"
-                             class="img-fluid rounded-circle mb-3"
-                             style="width: 120px; height: 120px; object-fit: cover; border: 2px solid #ddd;">
                         <h3 class="fw-bold text-white mb-1" th:text="${user.username}"></h3>
                         <p class="text-white text-opacity-75 mb-2" th:text="${user.email}"></p>
                         <span th:if="${user.role == 'ADMIN'}" class="badge bg-danger">Администратор</span>

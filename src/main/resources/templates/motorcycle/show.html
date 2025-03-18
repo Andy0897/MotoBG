@@ -8,7 +8,7 @@
         <div class="container mt-5">
             <h2 class="text-center text-white mb-4">Филтър за мотори</h2>
 
-            <form th:action="@{/motorcycles/filter}" method="get" class="bg-dark text-white p-4 rounded shadow-lg">
+            <form th:action="@{/motorcycles}" method="get" class="bg-dark text-white p-4 rounded shadow-lg">
                 <div class="row g-3">
                     <div class="col-lg-6">
                         <label for="brand" class="form-label">Марка</label>
@@ -42,9 +42,9 @@
 
                 <div class="row g-3 mt-3 align-items-center">
                     <div class="col-lg-8">
-                        <label for="cubicCapacity" class="form-label">Кубатура (cc)</label>
-                        <input type="range" class="form-range" id="cubicCapacity" name="cubicCapacity" min="50" max="2000" step="50" oninput="this.nextElementSibling.value = this.value">
-                        <output class="ms-2">1000</output> cc
+                        <label for="maxCubicCapacity" class="form-label">Максимална кубатура (куб.см)</label>
+                        <input type="range" class="form-range" id="maxCubicCapacity" name="maxCubicCapacity" min="50" max="2000" step="50" oninput="this.nextElementSibling.value = this.value">
+                        <output class="ms-2">1000</output> куб.см
                     </div>
                     <div class="col-lg-4">
                         <label for="isOffer" class="form-label">Само оферти</label>

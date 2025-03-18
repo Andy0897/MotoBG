@@ -28,41 +28,31 @@ public class MotorcycleController {
         this.modelRepository = modelRepository;
     }
 
-    @GetMapping("")
-    public String getShowMotorcycles(Model model) {
-        List<Motorcycle> motorcycles = (List<Motorcycle>) motorcycleRepository.findAll();
+    @GetMapping()
+    public String getShowMotorcycles(
+            @RequestParam(value = "brand", required = false) Long brandId,
+            @RequestParam(value = "model", required = false) Long modelId,
+            @RequestParam(value = "minPrice", required = false) Integer minPrice,
+            @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
+            @RequestParam(value = "maxCubicCapacity", required = false) Integer maxCubicCapacity,
+            @RequestParam(value = "mileage", required = false) Integer maxMileage,
+            @RequestParam(value = "isOffer", required = false) Boolean isOffer,
+            Model model) {
+        List<Motorcycle> motorcycles = ((List<Motorcycle>) motorcycleRepository.findAll()).stream()
+                .filter(motorcycle -> (brandId == null || motorcycle.getBrand().getId().equals(brandId)))
+                .filter(motorcycle -> (modelId == null || motorcycle.getModel().getId().equals(modelId)))
+                .filter(motorcycle -> (minPrice == null || motorcycle.getPrice() >= minPrice))
+                .filter(motorcycle -> (maxPrice == null || motorcycle.getPrice() <= maxPrice))
+                .filter(motorcycle -> (maxCubicCapacity == null || motorcycle.getCubicCapacity() <= maxCubicCapacity))
+                .filter(motorcycle -> (maxMileage == null || motorcycle.getMileage() <= maxMileage))
+                .filter(motorcycle -> (isOffer == null || motorcycle.isOffer() == isOffer))
+                .collect(Collectors.toList());
+
         model.addAttribute("motorcycles", motorcycles);
         model.addAttribute("brands", brandRepository.findAll());
         model.addAttribute("encoder", new ImageEncoder());
         return "motorcycle/show";
     }
-
-    @GetMapping("/filter")
-    public String filterMotorcycles(
-            @RequestParam(value = "brand", required = false) Long brandId,
-            @RequestParam(value = "model", required = false) Long modelId,
-            @RequestParam(value = "minPrice", required = false) Integer minPrice,
-            @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
-            @RequestParam(value = "mileage", required = false) Integer maxMileage,
-            @RequestParam(value = "isOffer", required = false) Boolean isOffer,
-            Model model) {
-
-        List<Motorcycle> filteredMotorcycles = ((List<Motorcycle>) motorcycleRepository.findAll()).stream()
-                .filter(motorcycle -> (brandId == null || motorcycle.getBrand().getId().equals(brandId)))
-                .filter(motorcycle -> (modelId == null || motorcycle.getModel().getId().equals(modelId)))
-                .filter(motorcycle -> (minPrice == null || motorcycle.getPrice() >= minPrice))
-                .filter(motorcycle -> (maxPrice == null || motorcycle.getPrice() <= maxPrice))
-                .filter(motorcycle -> (maxMileage == null || motorcycle.getMileage() <= maxMileage))
-                .filter(motorcycle -> (isOffer == null || motorcycle.isOffer() == isOffer))
-                .collect(Collectors.toList());
-
-        model.addAttribute("cars", filteredMotorcycles);
-        model.addAttribute("brands", brandRepository.findAll());
-        model.addAttribute("models", modelRepository.findAll());
-        model.addAttribute("encoder", new ImageEncoder());
-        return "motorcycle/show";
-    }
-
 
     @GetMapping("/{Id}")
     public String getShowMotorcycle(@PathVariable("Id") Long id, Model model) {
