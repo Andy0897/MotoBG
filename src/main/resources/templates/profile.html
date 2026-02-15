@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
-<body class="bg-dark">
+
+<body class="motor-bg">
 <nav th:replace="~{fragments/navbar}"></nav>
+
 <main>
     <div class="container mt-5" style="max-width: 1000px;">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6">
-                <div class="card bg-secondary bg-opacity-25 border-0 shadow-sm p-4">
-                    <div class="text-center">
-                        <h3 class="fw-bold text-white mb-1" th:text="${user.username}"></h3>
-                        <p class="text-white text-opacity-75 mb-2" th:text="${user.email}"></p>
-                        <span th:if="${user.role == 'ADMIN'}" class="badge bg-danger">Администратор</span>
-                    </div>
 
-                    <div class="text-center mt-4">
-                        <a th:href="@{/orders/profile-orders}" class="btn btn-danger w-100">Любими</a>
-                    </div>
-                    <form th:action="@{/logout}" method="post" class="text-center mt-3">
-                        <button type="submit" class="btn btn-danger w-100">Излез от профила</button>
+                <div class="card motor-card border-0 shadow-lg p-5 text-center">
+
+                    <h3 class="fw-bold text-light mb-1"
+                        th:text="${user.username}">
+                    </h3>
+
+                    <p class="text-secondary mb-3"
+                       th:text="${user.email}">
+                    </p>
+
+                    <span th:if="${user.role == 'ADMIN'}"
+                          class="badge bg-danger px-3 py-2 mb-3">
+                        Администратор
+                    </span>
+
+                    <form th:action="@{/logout}" method="post" class="mt-4">
+                        <button type="submit"
+                                class="btn btn-danger w-100 fw-semibold py-2">
+                            Излез от профила
+                        </button>
                     </form>
+
                 </div>
+
             </div>
         </div>
     </div>
 </main>
+
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

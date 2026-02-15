@@ -2,6 +2,7 @@ package com.example.MotoBG.Motorcycle;
 
 import com.example.MotoBG.CarBrand.*;
 import com.example.MotoBG.CarModel.*;
+import com.example.MotoBG.MotorcycleStatus.MotorcycleStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -54,6 +55,9 @@ public class Motorcycle {
     private boolean isOffer;
 
     private int offerPrice;
+
+    @Enumerated(EnumType.STRING)
+    private MotorcycleStatus motorcycleStatus;
 
     public Long getId() {
         return id;
@@ -165,5 +169,13 @@ public class Motorcycle {
 
     public void setOfferPrice(int offerPrice) {
         this.offerPrice = offerPrice;
+    }
+
+    public MotorcycleStatus getMotorcycleStatus() {
+        return motorcycleStatus;
+    }
+
+    public void setMotorcycleStatus(MotorcycleStatus motorcycleStatus) {
+        this.motorcycleStatus = motorcycleStatus;
     }
 }

@@ -1,43 +1,93 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
-<body class="bg-dark">
+
+<body class="motor-bg">
 <nav th:replace="~{fragments/navbar}"></nav>
+
 <main>
     <div class="container mt-5" style="max-width: 600px;">
-        <form th:action="@{/submit}" method="post" th:object="${user}" class="bg-secondary bg-opacity-25 shadow-sm p-4 rounded">
-            <h1 class="text-center text-white mb-4">Регистрация</h1>
+        <form th:action="@{/submit}"
+              method="post"
+              th:object="${user}"
+              class="motor-card shadow-lg p-5 rounded-4">
+
+            <h1 class="text-center text-light mb-4 fw-bold">
+                Регистрация
+            </h1>
 
             <div class="form-group mb-4">
-                <label for="username" class="text-white mb-1">Потребителско име</label>
-                <input type="text" th:field="*{username}" id="username" name="username" class="form-control" placeholder="Въведете потребителско име">
-                <div th:each="error : ${#fields.errors('username')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
-                <div th:if="${existsUserByUsername}" class="alert alert-danger mt-2" role="alert">Това потребителско име е заето</div>
+                <label for="username" class="text-secondary mb-1">
+                    Потребителско име
+                </label>
+                <input type="text"
+                       th:field="*{username}"
+                       id="username"
+                       class="form-control"
+                       placeholder="Въведете потребителско име">
+
+                <div th:each="error : ${#fields.errors('username')}"
+                     th:text="${error}"
+                     class="alert alert-danger mt-2"></div>
+
+                <div th:if="${existsUserByUsername}"
+                     class="alert alert-danger mt-2">
+                    Това потребителско име е заето
+                </div>
             </div>
 
             <div class="form-group mb-4">
-                <label for="email" class="text-white mb-1">Имейл</label>
-                <input type="email" th:field="*{email}" id="email" name="email" class="form-control" placeholder="Въведете имейл">
-                <div th:each="error : ${#fields.errors('email')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
-                <div th:if="${existsUserByEmail}" class="alert alert-danger mt-2" role="alert">Този имейл вече е използван</div>
+                <label for="email" class="text-secondary mb-1">
+                    Имейл
+                </label>
+                <input type="email"
+                       th:field="*{email}"
+                       id="email"
+                       class="form-control"
+                       placeholder="Въведете имейл">
+
+                <div th:each="error : ${#fields.errors('email')}"
+                     th:text="${error}"
+                     class="alert alert-danger mt-2"></div>
+
+                <div th:if="${existsUserByEmail}"
+                     class="alert alert-danger mt-2">
+                    Този имейл вече е използван
+                </div>
             </div>
 
             <div class="form-group mb-4">
-                <label for="password" class="text-white mb-1">Парола</label>
-                <input type="password" th:field="*{password}" id="password" name="password" class="form-control" placeholder="Въведете парола">
-                <div th:each="error : ${#fields.errors('password')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
+                <label for="password" class="text-secondary mb-1">
+                    Парола
+                </label>
+                <input type="password"
+                       th:field="*{password}"
+                       id="password"
+                       class="form-control"
+                       placeholder="Въведете парола">
+
+                <div th:each="error : ${#fields.errors('password')}"
+                     th:text="${error}"
+                     class="alert alert-danger mt-2"></div>
             </div>
 
-            <input type="submit" class="btn btn-danger mb-2 w-100" value="Регистрация"/>
+            <input type="submit"
+                   class="btn btn-danger w-100 fw-semibold py-2 mb-3"
+                   value="Регистрация"/>
 
-            <hr class="mb-2 border-white">
+            <hr class="border-secondary">
 
             <div class="text-center">
-                <a href="/sign-in" class="text-white text-decoration-none">Вече имаш акаунт?</a>
+                <a href="/sign-in"
+                   class="text-secondary text-decoration-none">
+                    Вече имаш акаунт?
+                </a>
             </div>
+
         </form>
     </div>
 </main>
+
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

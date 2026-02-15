@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
-<body>
-<div class="container-fluid d-flex align-items-center justify-content-center vh-100">
-    <div class="text-center">
-        <h1 class="display-1 fw-bold text-warning">403</h1>
-        <p class="fs-3"><span class="text-danger">Грешка!</span> Достъпът е забранен.</p>
-        <p class="lead">Нямате разрешение да преглеждате тази страница.</p>
-        <a href="/" class="btn btn-primary btn-lg mt-3">Върнете се към началото</a>
+<body class="motor-bg">
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="card bg-secondary bg-opacity-25 shadow-lg p-5 text-center" style="max-width: 500px;">
+        <h1 class="display-1 fw-bold text-danger mb-3">403</h1>
+        <h3 class="text-white mb-2">
+            Достъпът е забранен
+        </h3>
+        <p class="text-white text-opacity-75 mb-4">
+            Нямате необходимите права, за да преглеждате тази страница.
+            Ако смятате, че това е грешка, моля свържете се с администратор.
+        </p>
+        <a href="/" class="btn btn-danger btn-lg fw-bold">
+            Обратно към началото
+        </a>
     </div>
 </div>
 </body>

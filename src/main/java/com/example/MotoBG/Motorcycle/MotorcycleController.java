@@ -28,7 +28,7 @@ public class MotorcycleController {
         this.modelRepository = modelRepository;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getShowMotorcycles(
             @RequestParam(value = "brand", required = false) Long brandId,
             @RequestParam(value = "model", required = false) Long modelId,
@@ -38,7 +38,7 @@ public class MotorcycleController {
             @RequestParam(value = "mileage", required = false) Integer maxMileage,
             @RequestParam(value = "isOffer", required = false) Boolean isOffer,
             Model model) {
-        List<Motorcycle> motorcycles = ((List<Motorcycle>) motorcycleRepository.findAll()).stream()
+        List<Motorcycle> motorcycles = (motorcycleRepository.findAllAvailable()).stream()
                 .filter(motorcycle -> (brandId == null || motorcycle.getBrand().getId().equals(brandId)))
                 .filter(motorcycle -> (modelId == null || motorcycle.getModel().getId().equals(modelId)))
                 .filter(motorcycle -> (minPrice == null || motorcycle.getPrice() >= minPrice))
@@ -52,6 +52,15 @@ public class MotorcycleController {
         model.addAttribute("brands", brandRepository.findAll());
         model.addAttribute("encoder", new ImageEncoder());
         return "motorcycle/show";
+    }
+
+    @GetMapping("/deleted")
+    public String getShowMotorcycles(Model model) {
+        List<Motorcycle> motorcycles = motorcycleRepository.findAllSold();
+
+        model.addAttribute("deletedMotorcycles", motorcycles);
+        model.addAttribute("encoder", new ImageEncoder());
+        return "motorcycle/showDeleted";
     }
 
     @GetMapping("/{Id}")
@@ -86,9 +95,9 @@ public class MotorcycleController {
         return motorcycleService.submitMotorcycle(motorcycle, bindingResult, images, mainImageIndex, model);
     }
 
-    @PostMapping("/delete/{id}")
-    public String getSubmitDeleteMotorcycle(@PathVariable("id") Long id) {
-        return motorcycleService.submitDeleteMotorcycle(id);
+    @PostMapping("/submit-sold/{id}")
+    public String getSubmitAsSold(@PathVariable("id") Long id) {
+        return motorcycleService.submitAsSold(id);
     }
 
     @GetMapping("/offers/add/{id}")

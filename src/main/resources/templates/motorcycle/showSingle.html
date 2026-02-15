@@ -1,90 +1,83 @@
 <!DOCTYPE html>
 <html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
-<body class="bg-dark">
+<body class="motor-bg">
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
     <div class="container mt-4">
-        <div class="row">
-            <div class="col-lg-8 col-md-12">
-                <div class="text-center">
-                    <div class="position-relative" style="margin: 0 auto;">
-                        <img id="largeImage" class="img-fluid rounded"
-                             th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(motorcycle.images.get(motorcycle.mainImageIndex))}"
-                             alt="Large Image" style="width: 100%; max-height: 500px; object-fit: cover;" />
-                    </div>
-
-                    <div class="row mt-3 mx-auto" style="width: 100%; max-width: 500px;">
-                        <div th:each="image, iterStat : ${motorcycle.images}" class="col-4 col-sm-3 d-flex justify-content-center">
-                            <div class="thumbnail-container" style="width: 100%; height: 100px; overflow: hidden; background-color: black;">
-                                <img th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(image)}"
-                                     alt="Thumbnail"
-                                     style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;"
-                                     class="clickable-thumbnail" />
-                            </div>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card bg-secondary bg-opacity-25 p-3">
+                    <img id="largeImage"
+                         class="img-fluid rounded mb-3"
+                         th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(motorcycle.images.get(motorcycle.mainImageIndex))}"
+                         style="max-height: 500px; object-fit: cover;">
+                    <div class="row g-2">
+                        <div th:each="image : ${motorcycle.images}" class="col-3">
+                            <img th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(image)}"
+                                 class="img-fluid rounded clickable-thumbnail"
+                                 style="cursor:pointer; height:90px; object-fit:cover;">
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
-                <div class="container">
-                    <form sec:authorize="hasAuthority('ADMIN')" th:if="${motorcycle.isOffer == false}" th:action="@{/motorcycles/offers/add/{id}(id=${motorcycle.id})}" method="get" class="mb-3">
-                        <button class="btn btn-outline-danger w-100 fw-bold">
-                            Добави оферта
-                        </button>
+            <div class="col-lg-4">
+                <div sec:authorize="hasAuthority('ADMIN')" class="mb-3 d-grid gap-2">
+                    <form th:if="${!motorcycle.isOffer}"
+                          th:action="@{/motorcycles/offers/add/{id}(id=${motorcycle.id})}">
+                        <button class="btn btn-outline-danger fw-bold">Добави оферта</button>
                     </form>
-                    <form sec:authorize="hasAuthority('ADMIN')" th:if="${motorcycle.isOffer == true}" th:action="@{/motorcycles/offers/delete/{id}(id=${motorcycle.id})}" method="post" class="mb-3">
-                        <button class="btn btn-outline-danger w-100 fw-bold">
-                            Премахни оферта
-                        </button>
+                    <form th:if="${motorcycle.isOffer}"
+                          th:action="@{/motorcycles/offers/delete/{id}(id=${motorcycle.id})}" method="post">
+                        <button class="btn btn-outline-warning fw-bold">Премахни оферта</button>
                     </form>
-                    <form sec:authorize="hasAuthority('ADMIN')" th:action="@{/motorcycles/delete/{id}(id=${motorcycle.id})}" method="post" class="mb-3">
-                        <button class="btn btn-danger w-100 fw-bold">
-                            Изтрий обява
-                        </button>
+                    <form th:action="@{/motorcycles/submit-sold/{id}(id=${motorcycle.id})}" method="post">
+                        <button class="btn btn-danger fw-bold">Маркирай като продадена</button>
                     </form>
-
-                    <div class="card bg-secondary bg-opacity-25">
-                        <div class="card-header">
-                            <h2 class="text-white mb-3">
-                                <strong th:text="${motorcycle.brand.name} + ' ' + ${motorcycle.model.name}"></strong>
-                            </h2>
-                            <div th:if="${!motorcycle.isOffer}">
-                                <h2 class="card-subtitle text-white" th:text="${motorcycle.price} + ' лв.'"></h2>
-                            </div>
-                            <div th:if="${motorcycle.isOffer}">
-                                <h6 class="text-white mb-1" style="text-decoration: line-through;" th:text="${motorcycle.price} + ' лв.'"></h6>
-                                <h2 class="text-danger mb-0" th:text="${motorcycle.offerPrice} + ' лв.'"></h2>
-                            </div>
-                            <button class="btn btn-outline-danger mt-2 fw-bold w-100" onclick="showPhoneNumber(this)">
-                                Обади се
-                            </button>
+                </div>
+                <div class="card bg-secondary bg-opacity-25">
+                    <div class="card-body">
+                        <h3 class="text-white fw-bold mb-2"
+                            th:text="${motorcycle.brand.name} + ' ' + ${motorcycle.model.name}">
+                        </h3>
+                        <div th:if="${!motorcycle.isOffer}">
+                            <h4 class="text-white mb-3"
+                                th:text="${motorcycle.price} + ' лв.'"></h4>
                         </div>
+                        <div th:if="${motorcycle.isOffer}">
+                            <span class="text-white text-decoration-line-through"
+                                  th:text="${motorcycle.price} + ' лв.'"></span>
+                            <h3 class="text-danger"
+                                th:text="${motorcycle.offerPrice} + ' лв.'"></h3>
+                        </div>
+                        <button class="btn btn-danger w-100 fw-bold my-3"
+                                onclick="showPhoneNumber(this)">
+                            Обади се
+                        </button>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item bg-secondary bg-opacity-25">
-                                <p class="text-white text-opacity-50 mb-1 small">Двигател</p>
-                                <h5 class="text-white" th:text="${motorcycle.engine}"></h5>
+                            <li class="list-group-item bg-transparent text-white">
+                                <small class="opacity-50">Двигател</small>
+                                <div th:text="${motorcycle.engine}"></div>
                             </li>
-                            <li class="list-group-item bg-secondary bg-opacity-25">
-                                <p class="text-white text-opacity-50 mb-1 small">Кубатура</p>
-                                <h5 class="text-white" th:text="${motorcycle.cubicCapacity} + ' куб.см'"></h5>
+                            <li class="list-group-item bg-transparent text-white">
+                                <small class="opacity-50">Кубатура</small>
+                                <div th:text="${motorcycle.cubicCapacity} + ' куб.см'"></div>
                             </li>
-                            <li class="list-group-item bg-secondary bg-opacity-25">
-                                <p class="text-white text-opacity-50 mb-1 small">Мощност</p>
-                                <h5 class="text-white" th:text="${motorcycle.power} + ' к.с.'"></h5>
+                            <li class="list-group-item bg-transparent text-white">
+                                <small class="opacity-50">Мощност</small>
+                                <div th:text="${motorcycle.power} + ' к.с.'"></div>
                             </li>
-                            <li class="list-group-item bg-secondary bg-opacity-25">
-                                <p class="text-white text-opacity-50 mb-1 small">Скоростна кутия</p>
-                                <h5 class="text-white" th:text="${motorcycle.gearbox}"></h5>
+                            <li class="list-group-item bg-transparent text-white">
+                                <small class="opacity-50">Скоростна кутия</small>
+                                <div th:text="${motorcycle.gearbox}"></div>
                             </li>
-                            <li class="list-group-item bg-secondary bg-opacity-25">
-                                <p class="text-white text-opacity-50 mb-1 small">Категория</p>
-                                <h5 class="text-white" th:text="${motorcycle.category}"></h5>
+                            <li class="list-group-item bg-transparent text-white">
+                                <small class="opacity-50">Категория</small>
+                                <div th:text="${motorcycle.category}"></div>
                             </li>
-                            <li class="list-group-item bg-secondary bg-opacity-25">
-                                <p class="text-white text-opacity-50 mb-1 small">Пробег</p>
-                                <h5 class="text-white" th:text="${motorcycle.mileage} + ' км.'"></h5>
+                            <li class="list-group-item bg-transparent text-white">
+                                <small class="opacity-50">Пробег</small>
+                                <div th:text="${motorcycle.mileage} + ' км.'"></div>
                             </li>
                         </ul>
                     </div>
@@ -94,24 +87,18 @@
     </div>
 </main>
 <footer th:replace="~{fragments/footer}"></footer>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const thumbnails = document.querySelectorAll('.clickable-thumbnail');
-        const largeImage = document.getElementById('largeImage');
 
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function () {
-                const newSrc = thumbnail.getAttribute('src');
-                largeImage.setAttribute('src', newSrc);
-            });
+<script>
+    document.querySelectorAll('.clickable-thumbnail').forEach(img => {
+        img.addEventListener('click', () => {
+            document.getElementById('largeImage').src = img.src;
         });
     });
 
-    function showPhoneNumber(button) {
-        button.textContent = `0888123456`;
-        button.classList.remove('btn-outline-danger');
-        button.classList.add('btn-danger');
+    function showPhoneNumber(btn) {
+        btn.textContent = '0888 123 456';
     }
 </script>
+
 </body>
 </html>

@@ -1,55 +1,74 @@
-<nav class="navbar navbar-expand-lg bg-secondary bg-opacity-25" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<nav class="navbar navbar-expand-lg bg-secondary bg-opacity-25 backdrop-blur"
+     xmlns:sec="http://www.w3.org/1999/xhtml"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+
     <div class="container-fluid" style="max-width: 1000px;">
-        <a class="navbar-brand" href="/">
-            <h2 class="mr-4 text-danger" style="font-weight: bold;">Moto.bg</h2>
+
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+            <span class="fs-3 fw-bold text-danger">Moto.bg</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+        <button class="navbar-dark navbar-toggler border-0 text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-2">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/">Начало</a>
+                    <a class="nav-link text-white fw-semibold" href="/">
+                        Начало
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/motorcycles">Мотори</a>
+                    <a class="nav-link text-white fw-semibold" href="/motorcycles">
+                        Мотори
+                    </a>
                 </li>
             </ul>
-            <div class="d-flex align-items-center">
-                <div sec:authorize="isAnonymous" class="d-flex gap-2">
-                    <button class="btn btn-danger" onclick="window.location.href='/sign-in';">Вход</button>
-                    <button class="btn btn-danger" onclick="window.location.href='/sign-up';">Регистрация</button>
+
+            <!-- GUEST -->
+            <div sec:authorize="isAnonymous()" class="d-flex gap-2">
+                <a href="/sign-in" class="btn btn-outline-danger fw-semibold">
+                    Вход
+                </a>
+                <a href="/sign-up" class="btn btn-danger fw-semibold">
+                    Регистрация
+                </a>
+            </div>
+
+            <!-- AUTHENTICATED -->
+            <div sec:authorize="isAuthenticated()" class="d-flex align-items-center gap-2">
+
+                <div class="dropdown" sec:authorize="hasAuthority('ADMIN')">
+                    <button class="btn btn-danger dropdown-toggle fw-semibold"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Админ панел
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow">
+                        <li>
+                            <a class="dropdown-item" href="/motorcycles/add">
+                                Добави мотор
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/motorcycles/deleted">
+                                Продадени
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
-                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center gap-2">
-                    <div class="dropdown">
-                        <button sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
-                            Администраторски панел
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item" href="/motorcycles/add">Добави автомобил</a></li>
-                        </ul>
-                    </div>
-                    <button class="btn btn-danger" onclick="window.location.href='/profile';">
-                        Профил
-                    </button>
-                </div>
+                <a href="/profile" class="btn btn-danger fw-semibold">
+                    Профил
+                </a>
             </div>
+
         </div>
     </div>
 </nav>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dropdownToggle = document.getElementById('dropdownMenuLink');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
-        dropdownToggle.addEventListener('click', function (event) {
-            event.preventDefault();
-            if (dropdownMenu.classList.contains('show')) {
-                dropdownMenu.classList.remove('show');
-            } else {
-                dropdownMenu.classList.add('show');
-            }
-        });
-    });
-</script>

@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping({"/", "/home"})
     public String getHome(Model model) {
-        List<Motorcycle> motorcycles = (List<Motorcycle>) motorcycleRepository.findAll();
+        List<Motorcycle> motorcycles = motorcycleRepository.findAllAvailable();
         model.addAttribute("motorcycles", motorcycles.size() > 3 ? motorcycles.subList(0, 3) : motorcycles);
         model.addAttribute("encoder", new ImageEncoder());
         return "home";

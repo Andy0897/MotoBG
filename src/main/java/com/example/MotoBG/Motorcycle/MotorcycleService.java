@@ -2,6 +2,7 @@ package com.example.MotoBG.Motorcycle;
 
 import com.example.MotoBG.CarBrand.BrandRepository;
 import com.example.MotoBG.CarModel.ModelRepository;
+import com.example.MotoBG.MotorcycleStatus.MotorcycleStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -37,9 +38,9 @@ public class MotorcycleService {
                 }
             }
         } catch (IOException e) {
-            model.addAttribute("car", motorcycle);
+            model.addAttribute("motorcycle", motorcycle);
             model.addAttribute("hasUploadError", true);
-            return "car/add";
+            return "motorcycle/add";
         }
 
         if (motorcycle.getBrand() == null || motorcycle.getModel() == null || nullImages ||
@@ -47,7 +48,7 @@ public class MotorcycleService {
                 bindingResult.hasFieldErrors("mileage") || bindingResult.hasFieldErrors("price") ||
                 motorcycle.getCategory() == null || motorcycle.getEngine() == null ||
                 motorcycle.getGearbox() == null) {
-            model.addAttribute("car", motorcycle);
+            model.addAttribute("motorcycle", motorcycle);
             model.addAttribute("brands", brandRepository.findAll());
             model.addAttribute("models", modelRepository.findAll());
             model.addAttribute("areImagesSelected", !nullImages);
@@ -56,34 +57,35 @@ public class MotorcycleService {
             model.addAttribute("isEngineSelected", !motorcycle.getEngine().isEmpty());
             model.addAttribute("isGearboxSelected", !motorcycle.getGearbox().isEmpty());
             model.addAttribute("isCategorySelected", !motorcycle.getCategory().isEmpty());
-            return "car/add";
+            return "motorcycle/add";
         }
 
         motorcycle.setImages(imageList);
-
         motorcycle.setMainImageIndex(mainImageIndex);
-
+        motorcycle.setMotorcycleStatus(MotorcycleStatus.AVAILABLE);
         motorcycleRepository.save(motorcycle);
         return "redirect:/home";
     }
 
-    public String submitDeleteMotorcycle(Long id) {
-        motorcycleRepository.deleteById(id);
-        return "redirect:/cars/";
+    public String submitAsSold(Long id) {
+        Motorcycle motorcycle = motorcycleRepository.findById(id).get();
+        motorcycle.setMotorcycleStatus(MotorcycleStatus.SOLD);
+        motorcycleRepository.save(motorcycle);
+        return "redirect:/motorcycles";
     }
 
     public String submitOffer(Long id, int offerPrice, Model model) {
         Motorcycle motorcycle = motorcycleRepository.findById(id).get();
         motorcycle.setOfferPrice(offerPrice);
         if (motorcycle.getOfferPrice() >= motorcycle.getPrice() || motorcycle.getOfferPrice() < 1000) {
-            model.addAttribute("carId", id);
+            model.addAttribute("motorcycleId", id);
             model.addAttribute("offerPrice", offerPrice);
             model.addAttribute("invalidPrice", true);
-            return "car/addOffer";
+            return "motorcycle/addOffer";
         }
         motorcycle.setOffer(true);
         motorcycleRepository.save(motorcycle);
-        return "redirect:/cars/show/" + id;
+        return "redirect:/motorcycles/" + id;
     }
 
     public String submitDeleteOffer(Long id) {
@@ -91,6 +93,6 @@ public class MotorcycleService {
         motorcycle.setOffer(false);
         motorcycle.setOfferPrice(0);
         motorcycleRepository.save(motorcycle);
-        return "redirect:/cars/show/" + id;
+        return "redirect:/motorcycles/" + id;
     }
 }
